@@ -1,0 +1,11 @@
+opencv-python
+numpy
+mediapipe
+playsound
+pyttsx3
+tensorflow
+wordninja
+googletrans==4.0.0-rc1
+gTTS
+matplotlib
+scikit-learn
