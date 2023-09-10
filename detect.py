@@ -132,13 +132,14 @@ class Detect_Signs:
 
                                 display = sentence[-6:]
                                 popped_element = ''
-
+                                
                         sequence.clear()
                         predictions.clear()
-
-                        image = self.prob_viz(res, folders, image, colors)    
-                    cv2.rectangle(image, (0, 0), (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), 40), (0, 0, 0), -1)
-                    cv2.putText(image, ' '.join(display), (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
+                        
+                        image = self.prob_viz(res, folders, image, colors)
+                         
+                cv2.rectangle(image, (0, 0), (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), 40), (0, 0, 0), -1)
+                cv2.putText(image, ' '.join(display), (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
                 
                 font_scale = 0.4
                 font_thickness = 1
@@ -212,7 +213,8 @@ def main():
     DATA_PATH = os.path.join(args.data)
     model_path = os.path.join(args.model)
     counter = 0
-    os.makedirs('media')
+    if(os.path.exists('media') == False):
+        os.makedirs('media')
     if os.path.exists(DATA_PATH) == False:
         print(f"NO {DATA_PATH} FOLDER FOUND")
         exit()
