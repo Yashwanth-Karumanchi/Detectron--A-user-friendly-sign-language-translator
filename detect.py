@@ -14,6 +14,7 @@ from tensorflow.keras.optimizers import Adam
 
 import wordninja
 from googletrans import Translator
+import gtts
 from gtts import gTTS
 
 class Detect_Signs:
@@ -215,12 +216,17 @@ def main():
     counter = 0
     if(os.path.exists('media') == False):
         os.makedirs('media')
+    
     if os.path.exists(DATA_PATH) == False:
         print(f"NO {DATA_PATH} FOLDER FOUND")
         exit()
     
     if os.path.exists(model_path) == False:
         print(f"NO {model_path} FOLDER FOUND")
+        exit()
+
+    if args.lang not in gtts.lang.tts_langs():
+        print(f"{args.lang} LANGUAGE IS NOT AVAILABLE. AVAILABLE CODES ARE: \n\n {gtts.lang.tts_langs()}")
         exit()
     
     folders = np.array(detector.get_folder_names(DATA_PATH))
