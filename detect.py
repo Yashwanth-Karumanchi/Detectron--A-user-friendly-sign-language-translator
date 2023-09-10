@@ -199,9 +199,9 @@ class Detect_Signs:
             pygame.mixer.quit() 
         
     def get_arguments(self):
-        parser = argparse.ArgumentParser(description="Train a model.")
+        parser = argparse.ArgumentParser(description="Detect the signs.")
         parser.add_argument("--data", type=str, default='data', help="Relative location of the data folder")
-        parser.add_argument("--model", type=str, default='./models/model.h5', help="Trained model file in h5 format")
+        parser.add_argument("--model", type=str, default='./models/model.h5', help="Trained model file relative location")
         parser.add_argument("--lang", type=str, default='en', help="Language to be delivered")
 
         args = parser.parse_args()
@@ -212,17 +212,25 @@ def main():
     detector = Detect_Signs()
     args = detector.get_arguments()
     DATA_PATH = os.path.join(args.data)
+    model_path = os.path.join(args.model)
+    counter = 0
     if os.path.exists(DATA_PATH) == False:
         print(f"NO {DATA_PATH} FOLDER FOUND")
         exit()
     
+    if os.path.exists(model_path) == False:
+        print(f"NO {model_path} FOLDER FOUND")
+        exit()
+    
     folders = np.array(detector.get_folder_names(DATA_PATH))
     colors = [(245,117,16)]
+    model = detector.model_build(folders, args.model)
     while(True):
-        model = detector.model_build(folders, args.model)
+        counter += 1
         sentence = detector.detect(folders, model, colors)
         text = detector.text_generation(sentence)
         detector.text_to_speech(text, args.lang)
+        print("Detected times: ", counter)
 
 if __name__ == '__main__':
     main()

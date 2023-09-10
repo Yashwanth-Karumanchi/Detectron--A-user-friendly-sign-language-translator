@@ -35,6 +35,13 @@ class Dataset_Creation:
                     os.makedirs(os.path.join(DATA_PATH, folder, str(sequence)))
                 except:
                     pass
+                
+    def create_folders_specified(self, DATA_PATH, extend):
+        for sequence in range(self.no_sequences):
+            try:
+                os.makedirs(os.path.join(DATA_PATH, extend, str(sequence)))
+            except:
+                pass
 
 
     def get_folder_names(self, directory):
@@ -46,7 +53,8 @@ class Dataset_Creation:
         with self.mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
 
             for folder in folders:
-                for sequence in range(self.no_sequences):
+                length = self.count_directories(os.path.join(DATA_PATH, folder))
+                for sequence in range(length):
                     if(not any(os.scandir(os.path.join(DATA_PATH, folder, str(sequence))))):
                         for frame_num in range(self.sequence_length):
                             ret, frame = cap.read()
@@ -80,7 +88,12 @@ class Dataset_Creation:
 
         cap.release()
         cv2.destroyAllWindows()
-        
+    
+    def count_directories(self, folder_path):
+        count = 0
+        for item in os.listdir(folder_path):
+                count += 1
+        return count  
         
 def main():
     path = input("Enter relative path to the Data Folder:")
@@ -95,7 +108,7 @@ def main():
     data = create.get_folder_names(DATA_PATH)
     data = [element.lower() for element in data]
     while(True):
-        action = input("[~] Choose an Option\n [1] Add Data\n [2] Replace Data\n [3] Exit\n")
+        action = input("[~] Choose an Option\n [1] Add Data\n [2] Replace Data\n [3] Extend existing Data\n [4] Exit\n")
 
         if action == '1':
             addition = input("Enter new symbol or gesture: ")
@@ -122,6 +135,20 @@ def main():
             else:
                 print("NO RECORD FOUND TO REPLACE. TRY ADDING!")
         elif action == '3':
+            extend = input("Enter symbol or gesture to replace: ")
+            if extend.lower() in data:
+                length = create.count_directories(os.path.join(DATA_PATH, extend.lower()))
+                create.no_sequences = length + 30
+                create.create_folders_specified(DATA_PATH, extend.lower())
+                folders = np.array(create.get_folder_names(DATA_PATH))
+                print("Collecting Data")
+                create.collect_data(folders, DATA_PATH)
+                print("SUCCESSFULLY EXTENDED")
+                create.no_sequences = 30
+                cv2.destroyAllWindows()
+            else:
+                print("NO RECORD FOUND TO EXTEND. TRY ADDING!")
+        elif action == '4':
             break
 
 if __name__ == '__main__':

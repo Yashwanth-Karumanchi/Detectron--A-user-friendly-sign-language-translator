@@ -6,6 +6,7 @@ pyttsx3
 tensorflow
 wordninja
 googletrans==4.0.0-rc1
+pygame
 gTTS
 matplotlib
 scikit-learn

@@ -3,6 +3,7 @@ import os
 from matplotlib import pyplot as plt
 import mediapipe as mp
 import shutil
+import time
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -23,7 +24,6 @@ class Train_Model:
     def __init__(self):
         self.mp_holistic = mp.solutions.holistic
         self.mp_drawing = mp.solutions.drawing_utils
-        self.no_sequences = 30
         self.sequence_length = 30 
         
     def get_folder_names(self, directory):
@@ -31,9 +31,6 @@ class Train_Model:
         return folder_names
     
     def temporary_directory(self, source_dir, temp_dir):
-        if os.path.exists(temp_dir):
-            shutil.rmtree(temp_dir)
-
         shutil.copytree(source_dir, temp_dir)
     
     def data_split(self, temp_dir, folders, label_map):
@@ -182,13 +179,18 @@ class Train_Model:
         print("Recall:", recall)
         print("*************************************************************************")
 
-
+    def count_directories(self, folder_path):
+        count = 0
+        for item in os.listdir(folder_path):
+                count += 1
+        return count 
+    
     def get_arguments(self):
         parser = argparse.ArgumentParser(description="Train a model.")
         parser.add_argument("--data", type=str, default='data', help="Relative location of the data folder")
         parser.add_argument("--epochs", type=int, default=600, help="Number of training epochs")
         parser.add_argument("--patience", type=int, default=100, help="Patience for early stopping")
-        parser.add_argument("--model", type=str, default='./models/exp.h5', help="Name for the generated model file")
+        parser.add_argument("--model", type=str, default='exp.h5', help="Name for the generated model file")
 
         args = parser.parse_args()
         return args
@@ -201,7 +203,7 @@ def main():
     if os.path.exists(DATA_PATH) == False:
         print(f"NO {DATA_PATH} FOLDER FOUND")
         exit()
-    print("Data Processing and Training in progress ...")
+    print("Data Processing ...")
 
     folders = np.array(train.get_folder_names(DATA_PATH))
     label_map = {label:num for num, label in enumerate(folders)}
@@ -209,10 +211,16 @@ def main():
     target_names = [label for label, _ in sorted(label_map.items(), key=lambda x: x[1])]
     train.temporary_directory(DATA_PATH, temp_dir)
     X_train, y_train, X_val, y_val = train.data_split(temp_dir, folders, label_map)
+    print("Data Processing done. Training in progress ...")
+    start_time = time.time()
     model, history = train.model_train(X_train, y_train, X_val, y_val, folders, args.epochs, args.patience)
     train.model_plots(history, target_names, model, X_val, y_val)
     shutil.rmtree(temp_dir)
-    model.save(args.model)
+    elapsed_time = (time.time() - start_time)/3600
+    print(f"Training time: {elapsed_time} hrs")
+    print("*************************************************************************")
+    model_path = './models/'
+    model.save(os.path.join(model_path, args.model))
     
 if __name__ == '__main__':
     main()
