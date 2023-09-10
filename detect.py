@@ -140,10 +140,10 @@ class Detect_Signs:
                     cv2.rectangle(image, (0, 0), (int(cap.get(cv2.CAP_PROP_FRAME_WIDTH)), 40), (0, 0, 0), -1)
                     cv2.putText(image, ' '.join(display), (3, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 255, 255), 2, cv2.LINE_AA)
                 
-                font_scale = 0.5
+                font_scale = 0.4
                 font_thickness = 1
 
-                text = 'Press q for speech generation and e for exit'
+                text = 'Press: Q -> Speech Generation. E -> EXIT. BACKSPACE -> clear. R -> UNDO clear'
                 text_position = (30, int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) - 20)
                 font = cv2.FONT_HERSHEY_SIMPLEX
                 (text_width, text_height), _ = cv2.getTextSize(text, font, font_scale, font_thickness)
@@ -178,8 +178,6 @@ class Detect_Signs:
         text = ''.join(map(str, sentence))
         words = wordninja.split(text)
         text = ' '.join(map(str, words))
-        self.engine.say(text)
-        self.engine.runAndWait()
         return text
 
     def text_to_speech(self, text, language):
