@@ -81,7 +81,7 @@ class Detect_Signs:
         sequence = []
         sentence = []
         predictions = []
-        threshold = 0.7
+        threshold = 0.6
         prediction_start_time = None
         last_added_time = 0.0
         repeat_threshold = 3.0
@@ -212,6 +212,7 @@ def main():
     DATA_PATH = os.path.join(args.data)
     model_path = os.path.join(args.model)
     counter = 0
+    os.makedirs('media')
     if os.path.exists(DATA_PATH) == False:
         print(f"NO {DATA_PATH} FOLDER FOUND")
         exit()
