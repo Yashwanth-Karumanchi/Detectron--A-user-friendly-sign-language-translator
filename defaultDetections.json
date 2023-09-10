@@ -1,0 +1,14 @@
+{
+    "Alphabets": 
+        ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+            "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"], 
+     
+    "Numbers": 
+        ["zero", "one", "two", "three", "four", "five", "six", "seven", "eight",
+          "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen",
+            "sixteen", "seventeen", "eighteen", "nineteen", "twenty"], 
+      
+    "Gestures": 
+        ["again", "eat food", "hello", "help", "me", "milk", "more", 
+            "no", "please", "see you later", "sorry", "stop", "want", "what", "yes"]
+}
