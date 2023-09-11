@@ -180,6 +180,7 @@ class Train_Model:
         print("*************************************************************************")
         
         with open(os.path.join(file_name, 'metrics_and_report.txt'), 'w') as metrics_report_file:
+            metrics_report_file.write(f'Accuracy Score: {accuracy_score(ytrue, ypred)}\n')
             metrics_report_file.write(f'F1 Score: {f1}\n')
             metrics_report_file.write(f'Recall: {recall}\n\n')
             metrics_report_file.write('Classification Report:\n')

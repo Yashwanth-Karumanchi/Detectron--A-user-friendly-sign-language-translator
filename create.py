@@ -135,7 +135,7 @@ def main():
             else:
                 print("NO RECORD FOUND TO REPLACE. TRY ADDING!")
         elif action == '3':
-            extend = input("Enter symbol or gesture to replace: ")
+            extend = input("Enter symbol or gesture to extend: ")
             if extend.lower() in data:
                 length = create.count_directories(os.path.join(DATA_PATH, extend.lower()))
                 create.no_sequences = length + 30
