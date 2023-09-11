@@ -182,21 +182,22 @@ class Detect_Signs:
         text = ' '.join(map(str, words))
         return text
 
-    def text_to_speech(self, text, language):
+    def text_to_speech(self, text, language, counter):
         translator = Translator()
         if len(text) > 0:
             translation = translator.translate(text, src='en', dest=language)
             text = translation.text
             tts = gTTS(text=text, lang=language)
-            tts.save("./media/output.mp3")
+            file_name = 'output'+str(counter)+'.mp3'
+            tts.save(os.path.join('./audio_files', file_name))
             
             pygame.mixer.init()
-            pygame.mixer.music.load("./media/output.mp3")
+            pygame.mixer.music.load(os.path.join('./audio_files', file_name))
             pygame.mixer.music.play()
             while pygame.mixer.music.get_busy():
                 pygame.time.Clock().tick(10)
 
-            pygame.mixer.quit() 
+            pygame.mixer.quit()
         
     def get_arguments(self):
         parser = argparse.ArgumentParser(description="Detect the signs.")
@@ -213,9 +214,14 @@ def main():
     args = detector.get_arguments()
     DATA_PATH = os.path.join(args.data)
     model_path = os.path.join(args.model)
+    save_text_path = os.path.join('./text_files')
+    save_audio_path = os.path.join('./audio_files')
     counter = 0
-    if(os.path.exists('media') == False):
-        os.makedirs('media')
+    if os.path.exists(save_audio_path) == False:
+        os.makedirs(save_audio_path)
+    
+    if os.path.exists(save_text_path) == False:
+        os.makedirs(save_text_path)
     
     if os.path.exists(DATA_PATH) == False:
         print(f"NO {DATA_PATH} FOLDER FOUND")
@@ -236,7 +242,10 @@ def main():
         counter += 1
         sentence = detector.detect(folders, model, colors)
         text = detector.text_generation(sentence)
-        detector.text_to_speech(text, args.lang)
+        file_name = 'run'+str(counter)+'.txt'
+        with open(os.path.join(save_text_path, file_name), 'w') as file:
+            file.write(text)
+        detector.text_to_speech(text, args.lang, counter)
         print("Detected times: ", counter)
 
 if __name__ == '__main__':

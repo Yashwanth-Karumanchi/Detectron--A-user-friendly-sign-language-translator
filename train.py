@@ -31,7 +31,10 @@ class Train_Model:
         return folder_names
     
     def temporary_directory(self, source_dir, temp_dir):
+        if os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir)
         shutil.copytree(source_dir, temp_dir)
+    
     
     def data_split(self, temp_dir, folders, label_map):
         train_label_list, val_label_list = [], []
@@ -78,10 +81,7 @@ class Train_Model:
         for folder in folders:
             train_path = os.path.join(temp_dir, folder, 'train')
             for sequence in os.listdir(train_path):
-                window = []
-                for frame_num in range(self.sequence_length):
-                    res = np.load(os.path.join(temp_dir, folder, 'train', str(sequence), "{}.npy".format(frame_num)))
-                    window.append(res)
+                window = [np.load(os.path.join(temp_dir, folder, 'train', str(sequence), "{}.npy".format(frame_num))) for frame_num in range(self.sequence_length)]
                 train_sequences.append(window)
                 train_labels.append(label_map[folder])
 
@@ -89,10 +89,7 @@ class Train_Model:
         for folder in folders:
             val_path = os.path.join(temp_dir, folder, 'val')
             for sequence in os.listdir(val_path):
-                window = []
-                for frame_num in range(self.sequence_length):
-                    res = np.load(os.path.join(temp_dir, folder, 'val', str(sequence), "{}.npy".format(frame_num)))
-                    window.append(res)
+                window = [np.load(os.path.join(temp_dir, folder, 'val', str(sequence), "{}.npy".format(frame_num))) for frame_num in range(self.sequence_length)]
                 val_sequences.append(window)
                 val_labels.append(label_map[folder])
 
@@ -100,6 +97,7 @@ class Train_Model:
         y_train = to_categorical(train_labels).astype(int)
         X_val = np.array(val_sequences)
         y_val = to_categorical(val_labels).astype(int)
+        shutil.rmtree(temp_dir)
 
         return X_train, y_train, X_val, y_val
     
@@ -130,12 +128,12 @@ class Train_Model:
         
         return model, history
 
-    def model_plots(self, history, target_names, model, X_val, y_val):
-        print(min(history.history['val_loss']))
-
+    def model_plots(self, history, target_names, model, X_val, y_val, save_runs):
         train_loss=history.history['loss']
         val_loss = history.history['val_loss']
-
+        runs_count = self.count_directories(save_runs)
+        file_name = os.path.join(save_runs, 'run'+str(runs_count+1))
+        os.makedirs(file_name)
         # Plotting training and validation loss
         plt.plot(train_loss, label='Training Loss')
         plt.plot(val_loss, label='Validation Loss')
@@ -144,6 +142,7 @@ class Train_Model:
         plt.ylabel('Loss')
         plt.title('Training and Validation Loss')
         plt.legend()
+        plt.savefig(os.path.join(file_name, 'training_validation_loss.png'))
         plt.show()
 
 
@@ -158,6 +157,7 @@ class Train_Model:
         plt.ylabel('Accuracies')
         plt.title('Accuracies vs epochs')
         plt.legend()
+        plt.savefig(os.path.join(file_name, 'training_validation_accuracies.png'))
         plt.show()
 
         pred = model.predict(X_val)
@@ -178,12 +178,19 @@ class Train_Model:
         print("F1-score:", f1)
         print("Recall:", recall)
         print("*************************************************************************")
+        
+        with open(os.path.join(file_name, 'metrics_and_report.txt'), 'w') as metrics_report_file:
+            metrics_report_file.write(f'F1 Score: {f1}\n')
+            metrics_report_file.write(f'Recall: {recall}\n\n')
+            metrics_report_file.write('Classification Report:\n')
+            metrics_report_file.write(report)
 
     def count_directories(self, folder_path):
         count = 0
-        for item in os.listdir(folder_path):
-                count += 1
+        for entry in os.scandir(folder_path):
+            count += 1
         return count 
+
     
     def get_arguments(self):
         parser = argparse.ArgumentParser(description="Train a model.")
@@ -200,27 +207,36 @@ def main():
     train = Train_Model()
     args = train.get_arguments()
     DATA_PATH = os.path.join(args.data)
+    save_runs = os.path.join('./runs')
+    if os.path.exists(save_runs) == False:
+        os.makedirs(save_runs)
+        
     if os.path.exists(DATA_PATH) == False:
         print(f"NO {DATA_PATH} FOLDER FOUND")
         exit()
     print("Data Processing ...")
 
-    folders = np.array(train.get_folder_names(DATA_PATH))
-    label_map = {label:num for num, label in enumerate(folders)}
-    temp_dir = './tempdata1'
-    target_names = [label for label, _ in sorted(label_map.items(), key=lambda x: x[1])]
-    train.temporary_directory(DATA_PATH, temp_dir)
-    X_train, y_train, X_val, y_val = train.data_split(temp_dir, folders, label_map)
-    print("Data Processing done. Training in progress ...")
-    start_time = time.time()
-    model, history = train.model_train(X_train, y_train, X_val, y_val, folders, args.epochs, args.patience)
-    train.model_plots(history, target_names, model, X_val, y_val)
-    shutil.rmtree(temp_dir)
-    elapsed_time = (time.time() - start_time)/3600
-    print(f"Training time: {elapsed_time} hrs")
-    print("*************************************************************************")
-    model_path = './models/'
-    model.save(os.path.join(model_path, args.model))
+    try:
+        folders = np.array(train.get_folder_names(DATA_PATH))
+        label_map = {label:num for num, label in enumerate(folders)}
+        temp_dir = './tempdata'
+        target_names = [label for label, _ in sorted(label_map.items(), key=lambda x: x[1])]
+        train.temporary_directory(DATA_PATH, temp_dir)
+        X_train, y_train, X_val, y_val = train.data_split(temp_dir, folders, label_map)
+        print("Data Processing done. Created temporary directory. Training in progress ...")
+        start_time = time.time()
+        model, history = train.model_train(X_train, y_train, X_val, y_val, folders, args.epochs, args.patience)
+        elapsed_time = (time.time() - start_time)/3600
+        train.model_plots(history, target_names, model, X_val, y_val, save_runs)
+        print(f"Training time: {elapsed_time} hrs")
+        print("*************************************************************************")
+        run_count = train.count_directories(save_runs)
+        run_path = os.path.join(save_runs, 'run'+str(run_count))
+        model.save(os.path.join(run_path, args.model))
+        print(f"Run information and model saved at {run_path} folder")
+    finally:
+        if os.path.exists(temp_dir):
+            shutil.rmtree(temp_dir)
     
 if __name__ == '__main__':
     main()
