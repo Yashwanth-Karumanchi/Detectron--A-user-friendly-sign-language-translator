@@ -90,6 +90,12 @@ class Detect_Signs:
         display=[]
 
         cap = cv2.VideoCapture(0)
+        if not cap.isOpened():
+            cap = cv2.VideoCapture(1)
+            if not cap.isOpened():
+                cam = int(input("Default camera is not recognized. Please specify the camera device number to use that camera: "))
+                if not cap.isOpened():
+                    print("Error: No valid camera found. Please make sure you have a working camera connected.")
 
         with self.mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
             while cap.isOpened():
