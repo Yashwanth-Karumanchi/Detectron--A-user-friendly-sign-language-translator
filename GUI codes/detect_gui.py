@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import json
 from tkinter import messagebox
 import cv2
 import numpy as np
@@ -168,7 +169,7 @@ class Detect_Signs:
                 key = cv2.waitKey(10)
                 if key == ord('q'):
                     break
-                elif key == ord('e'):
+                elif key == ord('e') or cv2.getWindowProperty('OpenCV Feed', cv2.WND_PROP_VISIBLE) < 1:
                     exit()
                 elif key == 8: 
                     if len(sentence) > 0:
@@ -256,7 +257,7 @@ class GUI:
         # Set default paths here
         self.entry_data.insert(0, '../data')
         self.entry_model.insert(0, '../models/model.h5')
-        self.entry_lang.insert(0, 'en')
+        self.entry_lang.insert(0, 'english')
 
     def browse_data(self):
         folder = filedialog.askdirectory()
@@ -274,6 +275,14 @@ class GUI:
         data_path = self.entry_data.get()
         model_path = self.entry_model.get()
         lang = self.entry_lang.get()
+        with open('../supportedLanguages.json', 'r') as file:
+            languages = json.load(file)
+            
+        if lang.lower() not in languages:
+            messagebox.showerror("Error", f"Language code '{lang}' not found in language mappings.\n Available mappings:\n{gtts.lang.tts_langs()}")
+            return
+        
+        lang = languages[lang.lower()]
         self.root.destroy()
         detector = Detect_Signs()
         args = argparse.Namespace(data=data_path, model=model_path, lang=lang)
@@ -294,10 +303,6 @@ class GUI:
         
         if os.path.exists(model_path) == False:
             print(f"NO {model_path} FOLDER FOUND")
-            exit()
-
-        if args.lang not in gtts.lang.tts_langs():
-            print(f"{args.lang} LANGUAGE IS NOT AVAILABLE. AVAILABLE CODES ARE: \n\n {gtts.lang.tts_langs()}")
             exit()
         
         folders = np.array(detector.get_folder_names(DATA_PATH))

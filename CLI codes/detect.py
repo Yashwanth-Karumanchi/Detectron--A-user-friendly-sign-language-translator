@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import json
 import cv2
 import numpy as np
 import os
@@ -167,7 +168,7 @@ class Detect_Signs:
                 key = cv2.waitKey(10)
                 if key == ord('q'):
                     break
-                elif key == ord('e'):
+                elif key == ord('e') or cv2.getWindowProperty('OpenCV Feed', cv2.WND_PROP_VISIBLE) < 1:
                     exit()
                 elif key == 8: 
                     if len(sentence) > 0:
@@ -211,7 +212,7 @@ class Detect_Signs:
         parser = argparse.ArgumentParser(description="Detect the signs.")
         parser.add_argument("--data", type=str, default='../data', help="Relative location of the data folder")
         parser.add_argument("--model", type=str, default='../models/model.h5', help="Trained model file relative location")
-        parser.add_argument("--lang", type=str, default='en', help="Language to be delivered")
+        parser.add_argument("--lang", type=str, default='english', help="Language to be delivered")
 
         args = parser.parse_args()
         return args
@@ -224,6 +225,9 @@ def main():
     model_path = os.path.join(args.model)
     save_text_path = os.path.join('./text_files')
     save_audio_path = os.path.join('./audio_files')
+    with open('../supportedLanguages.json', 'r') as file:
+        languages = json.load(file)
+        
     counter = 0
     if os.path.exists(save_audio_path) == False:
         os.makedirs(save_audio_path)
@@ -239,8 +243,8 @@ def main():
         print(f"NO {model_path} FOLDER FOUND")
         exit()
 
-    if args.lang not in gtts.lang.tts_langs():
-        print(f"{args.lang} LANGUAGE IS NOT AVAILABLE. AVAILABLE CODES ARE: \n\n {gtts.lang.tts_langs()}")
+    if args.lang.lower() not in languages:
+        print(f"{args.lang.lower()} LANGUAGE IS NOT AVAILABLE. AVAILABLE CODES ARE: \n\n {gtts.lang.tts_langs()}")
         exit()
     
     folders = np.array(detector.get_folder_names(DATA_PATH))
