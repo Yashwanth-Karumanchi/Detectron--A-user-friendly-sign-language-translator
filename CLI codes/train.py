@@ -17,7 +17,7 @@ from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.optimizers import Adam
 from keras.callbacks import EarlyStopping
 
-from sklearn.metrics import multilabel_confusion_matrix, accuracy_score, confusion_matrix, f1_score, recall_score, classification_report
+from sklearn.metrics import accuracy_score, f1_score, recall_score, classification_report
 
 
 class Train_Model:
