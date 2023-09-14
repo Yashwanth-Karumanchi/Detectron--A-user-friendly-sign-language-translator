@@ -195,7 +195,7 @@ class Train_Model:
     
     def get_arguments(self):
         parser = argparse.ArgumentParser(description="Train a model.")
-        parser.add_argument("--data", type=str, default='data', help="Relative location of the data folder")
+        parser.add_argument("--data", type=str, default='../data', help="Relative location of the data folder")
         parser.add_argument("--epochs", type=int, default=600, help="Number of training epochs")
         parser.add_argument("--patience", type=int, default=100, help="Patience for early stopping")
         parser.add_argument("--model", type=str, default='exp.h5', help="Name for the generated model file")
@@ -207,6 +207,7 @@ class Train_Model:
 def main():
     train = Train_Model()
     args = train.get_arguments()
+    print(os.path())
     DATA_PATH = os.path.join(args.data)
     save_runs = os.path.join('./runs')
     if os.path.exists(save_runs) == False:

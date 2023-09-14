@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import cv2
 import numpy as np
 import os
@@ -207,8 +209,8 @@ class Detect_Signs:
         
     def get_arguments(self):
         parser = argparse.ArgumentParser(description="Detect the signs.")
-        parser.add_argument("--data", type=str, default='data', help="Relative location of the data folder")
-        parser.add_argument("--model", type=str, default='./models/model.h5', help="Trained model file relative location")
+        parser.add_argument("--data", type=str, default='../data', help="Relative location of the data folder")
+        parser.add_argument("--model", type=str, default='../models/model.h5', help="Trained model file relative location")
         parser.add_argument("--lang", type=str, default='en', help="Language to be delivered")
 
         args = parser.parse_args()

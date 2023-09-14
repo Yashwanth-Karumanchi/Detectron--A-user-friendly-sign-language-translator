@@ -58,7 +58,6 @@ class Dataset_Creation:
                     print("Error: No valid camera found. Please make sure you have a working camera connected.")
                         
         with self.mp_holistic.Holistic(min_detection_confidence=0.5, min_tracking_confidence=0.5) as holistic:
-
             for folder in folders:
                 length = self.count_directories(os.path.join(DATA_PATH, folder))
                 for sequence in range(length):
