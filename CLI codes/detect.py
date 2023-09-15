@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import json
 import cv2
 import numpy as np
