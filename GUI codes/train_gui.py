@@ -201,7 +201,7 @@ class Train_Model:
 
     def train(self):
         DATA_PATH = self.data_path
-        save_runs = os.path.join('./runs')
+        save_runs = os.path.join('../runs')
         if os.path.exists(save_runs) == False:
             os.makedirs(save_runs)
             

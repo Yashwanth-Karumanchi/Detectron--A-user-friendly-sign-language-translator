@@ -199,10 +199,10 @@ class Detect_Signs:
             text = translation.text
             tts = gTTS(text=text, lang=language)
             file_name = 'output'+str(counter)+'.mp3'
-            tts.save(os.path.join('./audio_files', file_name))
+            tts.save(os.path.join('../Detections/audio_files', file_name))
             
             pygame.mixer.init()
-            pygame.mixer.music.load(os.path.join('./audio_files', file_name))
+            pygame.mixer.music.load(os.path.join('../Detections/audio_files', file_name))
             pygame.mixer.music.play()
             while pygame.mixer.music.get_busy():
                 pygame.time.Clock().tick(10)
@@ -275,7 +275,8 @@ class GUI:
         data_path = self.entry_data.get()
         model_path = self.entry_model.get()
         lang = self.entry_lang.get()
-        with open('../supportedLanguages.json', 'r') as file:
+        lang_file = '../supportedLanguages.json'
+        with open(lang_file, 'r') as file:
             languages = json.load(file)
             
         if lang.lower() not in languages:
@@ -288,8 +289,10 @@ class GUI:
         args = argparse.Namespace(data=data_path, model=model_path, lang=lang)
         DATA_PATH = os.path.join(args.data)
         model_path = os.path.join(args.model)
-        save_text_path = os.path.join('./text_files')
-        save_audio_path = os.path.join('./audio_files')
+        output_path = "../Detections"
+        os.makedirs(output_path, exist_ok=True)
+        save_text_path = os.path.join(output_path, 'text_files')
+        save_audio_path = os.path.join(output_path, 'audio_files')
         counter = 0
         if os.path.exists(save_audio_path) == False:
             os.makedirs(save_audio_path)
