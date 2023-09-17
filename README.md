@@ -29,7 +29,7 @@ How to run it? Well, that's pretty easy for GUI.
 5. Click on start training and there it is! Your model is built and is stored at runs folder in main directory where you have the repository downloaded! (Usually takes time. Donot panic if slow)
     
 
-   **DETECTION** 
+  **DETECTION** 
 1. To start detection, navigate to App folder, and double click on 'Detect' file to start detection. A dialog box pops up! The default values are set here, which the user can change using our GUI.
 2. Choose the folder where your data is present, else leave it on default, choose any model you have trained and select the language for speech generation.
 3. The sign language recognition starts! You can press Q to generate speech output and E to exit. If any wrong detection's take place, use BACKSPACE to erase it. If a backspace is clicked by mistake, click on R to undo deletion.
