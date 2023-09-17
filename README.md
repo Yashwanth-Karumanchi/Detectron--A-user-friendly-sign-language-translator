@@ -42,4 +42,6 @@ FOR MORE TECH PERSONS THAT WANT TO PLAY AROUND USING CLI:
 3. For training purposes, you can execute "python train.py --epochs 600 --data ../data --patience 100 --model exp". Of course, those values can be changed to specify number of epochs to run training for, data       folder path, patience for early stopping of the model, and name for the model to be saved with.
 4. For detection purposes, you can execute "python detect.py --data ../data --model ../models/model.h5 --lang english". Of course, those values can be changed to specify the data folder path, model path to be       used and the language to generate speech.
 
+--ALSO...this is just an experimental approach we have achieved, so please ensure to have good lighting and webcam for detection purposes--   
+
 And there's that. This is our take on Sign Language Translation for people in needs. For people who are interested in this domain, feel free to use our work for reference or even develop on it. Thank you.
