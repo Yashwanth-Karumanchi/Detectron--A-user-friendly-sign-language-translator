@@ -35,4 +35,11 @@ How to run it? Well, that's pretty easy for GUI.
 3. The sign language recognition starts! You can press Q to generate speech output and E to exit. If any wrong detection's take place, use BACKSPACE to erase it. If a backspace is clicked by mistake, click on R to undo deletion.
 4. The detections including the speech and text files are stored in Detections folder on the main folder, where you have downloaded the repository.
 
+FOR MORE TECH PERSONS THAT WANT TO PLAY AROUND USING CLI:
+
+--You can navigate to CLI codes folder, where you can execute the file on Command Prompt. 
+--For modification of data, you can execute the command 'python create.py' to interact with the data. Again, default is data folder that we provided
+--For training purposes, you can execute "python train.py --epochs 600 --data ../data --patience 100 --model exp". Of course, those values can be changed to specify number of epochs to run training for, data folder path, patience for early stopping of the model, and name for the model to be saved with.
+--For detection purposes, you can execute "python detect.py --data ../data --model ../models/model.h5 --lang english". Of course, those values can be changed to specify the data folder path, model path to be used and the language to generate speech.
+
 And there's that. This is our take on Sign Language Translation for people in needs. For people who are interested in this domain, feel free to use our work for reference or even develop on it. Thank you.

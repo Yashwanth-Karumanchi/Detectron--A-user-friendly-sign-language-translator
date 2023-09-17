@@ -219,6 +219,12 @@ def main():
     print("Data Processing ...")
 
     try:
+        _, ext = os.path.splitext(args.model)
+        valid_extensions = ['.h5', '.keras', '.model']
+
+        if ext not in valid_extensions:
+            args.model += '.h5'
+            
         folders = np.array(train.get_folder_names(DATA_PATH))
         label_map = {label:num for num, label in enumerate(folders)}
         temp_dir = './tempdata'
