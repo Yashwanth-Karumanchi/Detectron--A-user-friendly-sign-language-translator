@@ -3,7 +3,7 @@
 Heya fellas!
 There's a huge advancement in tech in the area of sign language translation, and yes, here's our take on it. 
 
-This is a sign language translator that can generate speech output in any language that user wants for the signs of American Sign Language. Well, is it limited to ASL? NO. We have a fantastic gui that anyone can interact with to add any number of symbols from any set of signs. Then, train the model, and viola, there's your sign language translator.
+This is a sign language translator that can generate speech output in any language that user wants for the signs of American Sign Language. Well, is it limited to ASL? NO. We have a fantastic gui that anyone can interact with to add any number of symbols from any set of signs. Then, train the model, and voila, there's your sign language translator.
 For those tech savvy people, we also have a CLI version that you can access in the CLI codes folder. We used LSTM and MediaPipe to perform detection, with an accuracy of 99%.
 
 The default detections that our model can make are provided in the defaultDetections.json file in the repo, and you can know what languages are supported from the supportedLanguages.json.
