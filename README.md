@@ -1,6 +1,6 @@
 # Detectron- A user friendly sign language translator
 
-Heya fellas! 
+Heya fellas!
 There's a huge advancement in tech in the area of sign language translation, and yes, here's our take on it. 
 
 This is a sign language translator that can generate speech output in any language that user wants for the signs of American Sign Language. Well, is it limited to ASL? NO. We have a fantastic gui that anyone can interact with to add any number of symbols from any set of signs. Then, train the model, and viola, there's your sign language translator.
