@@ -37,9 +37,9 @@ How to run it? Well, that's pretty easy for GUI.
 
 FOR MORE TECH PERSONS THAT WANT TO PLAY AROUND USING CLI:
 
---You can navigate to CLI codes folder, where you can execute the file on Command Prompt. 
---For modification of data, you can execute the command 'python create.py' to interact with the data. Again, default is data folder that we provided
---For training purposes, you can execute "python train.py --epochs 600 --data ../data --patience 100 --model exp". Of course, those values can be changed to specify number of epochs to run training for, data folder path, patience for early stopping of the model, and name for the model to be saved with.
---For detection purposes, you can execute "python detect.py --data ../data --model ../models/model.h5 --lang english". Of course, those values can be changed to specify the data folder path, model path to be used and the language to generate speech.
+1. You can navigate to CLI codes folder, where you can execute the file on Command Prompt. 
+2. For modification of data, you can execute the command 'python create.py' to interact with the data. Again, default is data folder that we provided
+3. For training purposes, you can execute "python train.py --epochs 600 --data ../data --patience 100 --model exp". Of course, those values can be changed to specify number of epochs to run training for, data       folder path, patience for early stopping of the model, and name for the model to be saved with.
+4. For detection purposes, you can execute "python detect.py --data ../data --model ../models/model.h5 --lang english". Of course, those values can be changed to specify the data folder path, model path to be       used and the language to generate speech.
 
 And there's that. This is our take on Sign Language Translation for people in needs. For people who are interested in this domain, feel free to use our work for reference or even develop on it. Thank you.
