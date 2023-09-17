@@ -295,8 +295,14 @@ class TrainModelGUI:
         patience = int(self.entry_patience.get())
         model_name = self.entry_model.get()
         self.master.destroy()
-
+        
         if data_path and epochs and patience and model_name:
+            _, ext = os.path.splitext(model_name)
+            valid_extensions = ['.h5', '.keras', '.model']
+
+            if ext not in valid_extensions:
+                model_name += '.h5'
+            
             train = Train_Model(data_path=data_path, epochs=epochs, patience=patience, model_name=model_name)
             train.run()
             messagebox.showinfo("Training Complete", "Model has been trained successfully!")

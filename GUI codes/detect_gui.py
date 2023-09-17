@@ -266,7 +266,7 @@ class GUI:
             self.entry_data.insert(0, folder)
 
     def browse_model(self):
-        model_file = filedialog.askopenfilename(filetypes=[("H5 Files", "*.h5", "*.keras")])
+        model_file = filedialog.askopenfilename(filetypes=[("H5 Files", "*.h5"), ("Keras Files", "*.keras"), ("Model files", "*.model")])
         if model_file:
             self.entry_model.delete(0, tk.END)
             self.entry_model.insert(0, model_file)

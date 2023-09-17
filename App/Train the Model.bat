@@ -1,2 +1,3 @@
-@cd /d "%~dp0\..\gui codes"
+@echo on
+@cd /d "%~dp0\..\GUI Codes"
 @python.exe train_gui.py %*
