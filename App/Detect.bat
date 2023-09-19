@@ -2,6 +2,14 @@
 python -c "print('Python is available')"
 if errorlevel 1 goto :python_not_found
 
+powershell -command "Test-Path -Path 'HKLM:\SOFTWARE\Microsoft\Windows Media Foundation\Platform' | Out-Null"
+if errorlevel 1 (
+    echo No webcam found.
+) else (
+    echo Webcam found.
+)
+
+
 @cd /d "%~dp0\..\gui codes"
 @python.exe detect_gui.py %*
 goto :end
