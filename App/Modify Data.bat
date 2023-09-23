@@ -5,6 +5,7 @@ if errorlevel 1 goto :python_not_found
 powershell -command "Test-Path -Path 'HKLM:\SOFTWARE\Microsoft\Windows Media Foundation\Platform' | Out-Null"
 if errorlevel 1 (
     echo No webcam found.
+    pause
 ) else (
     echo Webcam found.
 )

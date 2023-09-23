@@ -207,7 +207,6 @@ class Train_Model:
 def main():
     train = Train_Model()
     args = train.get_arguments()
-    print(os.path())
     DATA_PATH = os.path.join(args.data)
     save_runs = os.path.join('./runs')
     if os.path.exists(save_runs) == False:
