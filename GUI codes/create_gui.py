@@ -15,7 +15,7 @@ class Dataset_Creation:
 
         self.master = tk.Tk()
         self.master.title("Dataset Creation")
-        self.master.geometry("400x300")
+        self.master.geometry("500x300")
 
         self.label_data = tk.Label(self.master, text="Data Folder:")
         self.label_data.pack(pady=(10, 0))
@@ -34,6 +34,9 @@ class Dataset_Creation:
 
         self.btn_extend_data = tk.Button(self.master, text="Extend Data", command=self.extend_data)
         self.btn_extend_data.pack(pady=(10, 0))
+        
+        self.btn_delete_data = tk.Button(self.master, text="Delete Data", command=self.delete_data)
+        self.btn_delete_data.pack(pady=(10, 0))
 
         self.btn_exit = tk.Button(self.master, text="Exit", command=self.master.quit)
         self.btn_exit.pack(pady=(20, 0))
@@ -110,6 +113,23 @@ class Dataset_Creation:
                 messagebox.showinfo("Extension Inomplete", "No record found to extend. Try Adding!")
         else:
             messagebox.showinfo("Extension Inomplete", "Invalid field!")
+            
+    def delete_data(self):
+        data_path = self.entry_data.get()
+        data = self.get_folder_names(data_path)
+        data = [element.lower() for element in data]
+
+        delete = simpledialog.askstring("Input", "Enter symbol or gesture to delete:")
+        if delete is not None and delete != "" and delete.lower() in data:
+            delete = delete.lower()
+            delete_folder = os.path.join(data_path, delete)
+            if os.path.exists(delete_folder):
+                shutil.rmtree(delete_folder)
+                messagebox.showinfo("Deletion Complete", f"Successfully deleted {delete} folder")
+            else:
+                messagebox.showinfo("Deletion Inomplete", "No record found to delete")
+        else:
+            messagebox.showinfo("Deletion Inomplete", "Invalid field!")
 
     def mediapipe_detection(self, image, model):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
