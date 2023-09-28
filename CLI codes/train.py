@@ -15,6 +15,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, LeakyReLU, Dense, Dropout, BatchNormalization
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import load_model
 from keras.callbacks import EarlyStopping
 
 from sklearn.metrics import accuracy_score, f1_score, recall_score, classification_report
@@ -102,29 +103,19 @@ class Train_Model:
         return X_train, y_train, X_val, y_val
     
     def model_train(self, X_train, y_train, X_val, y_val, folders, epochs, patience):
-        model = Sequential([
-            LSTM(64, return_sequences=True, input_shape=(30, 126)),
-            BatchNormalization(),  # Add batch normalization
-            LeakyReLU(alpha=0.1),
-            LSTM(128, return_sequences=True),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            LSTM(64, return_sequences=False),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            Dense(64),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            Dropout(0.3),
-            Dense(folders.shape[0], activation='softmax')
-        ])
+        model = load_model('../models/model.h5')
+        model = Sequential(model.layers[:-1])
+        
+        new_output_layer = Dense(folders.shape[0], activation='softmax', name='new_dense_layer')
+        model.add(new_output_layer)
         
         model.summary()
 
         optimizer = Adam(learning_rate=0.0001)
         model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['categorical_accuracy'])
+
         early_stopping = EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True)
-        history = model.fit(X_train, y_train, epochs=epochs,validation_data=(X_val, y_val), callbacks=[early_stopping])
+        history = model.fit(X_train, y_train, epochs=epochs, validation_data=(X_val, y_val), callbacks=[early_stopping])
         
         return model, history
 
@@ -197,7 +188,7 @@ class Train_Model:
         parser = argparse.ArgumentParser(description="Train a model.")
         parser.add_argument("--data", type=str, default='../data', help="Relative location of the data folder")
         parser.add_argument("--epochs", type=int, default=600, help="Number of training epochs")
-        parser.add_argument("--patience", type=int, default=100, help="Patience for early stopping")
+        parser.add_argument("--patience", type=int, default=10, help="Patience for early stopping")
         parser.add_argument("--model", type=str, default='exp.h5', help="Name for the generated model file")
 
         args = parser.parse_args()

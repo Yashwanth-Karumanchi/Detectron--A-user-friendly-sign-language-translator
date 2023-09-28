@@ -16,9 +16,9 @@ from tkinter import filedialog, messagebox
 from sklearn.model_selection import train_test_split
 from tensorflow.keras.utils import to_categorical
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import LSTM, LeakyReLU, Dense, Dropout, BatchNormalization
-from tensorflow.keras.callbacks import TensorBoard
+from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import load_model
 from keras.callbacks import EarlyStopping
 
 from sklearn.metrics import accuracy_score, f1_score, recall_score, classification_report
@@ -109,29 +109,19 @@ class Train_Model:
         return X_train, y_train, X_val, y_val
     
     def model_train(self, X_train, y_train, X_val, y_val, folders, epochs, patience):
-        model = Sequential([
-            LSTM(64, return_sequences=True, input_shape=(30, 126)),
-            BatchNormalization(),  # Add batch normalization
-            LeakyReLU(alpha=0.1),
-            LSTM(128, return_sequences=True),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            LSTM(64, return_sequences=False),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            Dense(64),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            Dropout(0.3),
-            Dense(folders.shape[0], activation='softmax')
-        ])
+        model = load_model('../models/model.h5')
+        model = Sequential(model.layers[:-1])
+        
+        new_output_layer = Dense(folders.shape[0], activation='softmax', name='new_dense_layer')
+        model.add(new_output_layer)
         
         model.summary()
 
         optimizer = Adam(learning_rate=0.0001)
         model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['categorical_accuracy'])
+
         early_stopping = EarlyStopping(monitor='val_loss', patience=patience, restore_best_weights=True)
-        history = model.fit(X_train, y_train, epochs=epochs,validation_data=(X_val, y_val), callbacks=[early_stopping])
+        history = model.fit(X_train, y_train, epochs=epochs, validation_data=(X_val, y_val), callbacks=[early_stopping])
         
         return model, history
 
@@ -280,7 +270,7 @@ class TrainModelGUI:
         # Set default paths here
         self.entry_data.insert(0, '../data')
         self.entry_model.insert(0, 'exp.h5')
-        self.entry_patience.insert(0, '100')
+        self.entry_patience.insert(0, '10')
         self.entry_epochs.insert(0, '600')
 
     def browse_data(self):

@@ -56,13 +56,15 @@ class Dataset_Creation:
     def add_data(self):
         data_path = self.entry_data.get()
         os.makedirs(data_path, exist_ok=True)
+        data_path = os.path.join(data_path)
         data = self.get_folder_names(data_path)
         data = [element.lower() for element in data]
 
         new_symbol = simpledialog.askstring("Input", "Enter new symbol or gesture:")
         if new_symbol is not None and new_symbol != "" and new_symbol.lower() not in data:
             new_symbol = new_symbol.lower()
-            self.create_folders(data_path, new_symbol)
+            data.append(new_symbol)
+            self.create_folders(data_path, data)
 
             print(f"Collecting Data for {new_symbol}")
             self.collect_data([new_symbol], data_path)
@@ -81,7 +83,8 @@ class Dataset_Creation:
             replace = replace.lower()
             if replace in os.listdir(data_path):
                 shutil.rmtree(os.path.join(data_path, replace))
-                self.create_folders(data_path, replace)
+                data.append(replace)
+                self.create_folders(data_path, data)
                 print(f"Collecting Data for {replace}")
                 self.collect_data([replace], data_path)
                 messagebox.showinfo("Replace Complete", "Data has been replaced successfully!")
