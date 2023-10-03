@@ -12,6 +12,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, LeakyReLU, Dense, Dropout, BatchNormalization
 from tensorflow.keras.callbacks import TensorBoard
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.models import load_model
 
 import wordninja
 from googletrans import Translator
@@ -47,27 +48,8 @@ class Detect_Signs:
         folder_names = [item for item in os.listdir(directory) if os.path.isdir(os.path.join(directory, item))]
         return folder_names
     
-    def model_build(self, folders, model_name):
-        model = Sequential([
-            LSTM(64, return_sequences=True, input_shape=(30, 126)),
-            BatchNormalization(),  # Add batch normalization
-            LeakyReLU(alpha=0.1),
-            LSTM(128, return_sequences=True),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            LSTM(64, return_sequences=False),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            Dense(64),
-            BatchNormalization(),
-            LeakyReLU(alpha=0.1),
-            Dropout(0.3),
-            Dense(folders.shape[0], activation='softmax')
-        ])
-
-        optimizer = Adam(learning_rate=0.0001)
-        model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['categorical_accuracy'])
-        model.load_weights(model_name)
+    def model_build(self, model_name):
+        model = load_model(model_name)
         
         return model
 
