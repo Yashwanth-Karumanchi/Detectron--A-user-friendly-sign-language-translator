@@ -10,3 +10,4 @@ googletrans==4.0.0-rc1
 gTTS
 matplotlib
 scikit-learn
+jax
