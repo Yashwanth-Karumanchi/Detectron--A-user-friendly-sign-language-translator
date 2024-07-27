@@ -2,7 +2,7 @@
 python -c "print('Python is available')"
 if errorlevel 1 goto :python_not_found
 
-@cd /d "%~dp0\..\gui codes"
+@cd "%~dp0\..\gui codes"
 @python.exe train_gui.py %*
 goto :end
 

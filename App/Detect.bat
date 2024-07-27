@@ -11,7 +11,7 @@ if errorlevel 1 (
 )
 
 
-@cd /d "%~dp0\..\gui codes"
+@cd "%~dp0\..\gui codes"
 @python.exe detect_gui.py %*
 goto :end
 
